@@ -35,7 +35,7 @@ export function parseSpec(raw: unknown, source: string, {enforceExactVersion = t
   const isURL = URL.canParse(range);
   if (!isURL) {
     if (enforceExactVersion && !semver.valid(range))
-      throw new UsageError(`Invalid package manager specification in ${source} (${raw}); expected a semver version${enforceExactVersion ? `` : `, range, or tag`}`);
+      throw new UsageError(`Invalid package manager specification in ${source} (${raw}); expected an exact semver version or URL`);
 
     if (!isSupportedPackageManager(name)) {
       throw new UsageError(`Unsupported package manager specification (${raw})`);
