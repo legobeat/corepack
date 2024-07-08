@@ -193,8 +193,15 @@ async function download(installTarget: string, url: string, algo: string, binPat
 
 export async function installVersion(installTarget: string, locator: Locator, {spec}: {spec: PackageManagerSpec}): Promise<InstallSpec> {
   const locatorIsASupportedPackageManager = isSupportedPackageManagerLocator(locator);
-  const locatorReference = locatorIsASupportedPackageManager ? semver.parse(locator.reference)! : parseURLReference(locator);
+  const locatorReference = locatorIsASupportedPackageManager ? semver.parse(locator.reference) : parseURLReference(locator);
+
+  // not exact semver version
+  if (locatorReference === null) {
+    console.error('DAYONE', {installTarget, locator, spec})
+    throw new Error();
+  }
   const {version, build} = locatorReference;
+  console.error('INSTALLVERSION', {installTarget, locator, spec})
 
   const installFolder = path.join(installTarget, locator.name, version);
 

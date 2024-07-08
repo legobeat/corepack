@@ -10,7 +10,7 @@ import {Descriptor, isSupportedPackageManager} from './types';
 
 const nodeModulesRegExp = /[\\/]node_modules[\\/](@[^\\/]*[\\/])?([^@\\/][^\\/]*)$/;
 
-export function parseSpec(raw: unknown, source: string, {enforceExactVersion = true} = {}): Descriptor {
+export function parseSpec(raw: unknown, source: string, {enforceExactVersion = false, enforceSemver = true} = {}): Descriptor {
   if (typeof raw !== `string`)
     throw new UsageError(`Invalid package manager specification in ${source}; expected a string`);
 
@@ -35,7 +35,9 @@ export function parseSpec(raw: unknown, source: string, {enforceExactVersion = t
   const isURL = URL.canParse(range);
   if (!isURL) {
     if (enforceExactVersion && !semver.valid(range))
-      throw new UsageError(`Invalid package manager specification in ${source} (${raw}); expected a semver version${enforceExactVersion ? `` : `, range, or tag`}`);
+      throw new UsageError(`Invalid package manager specification in ${source} (${raw}); expected an exact semver version or URL`);
+    if (enforceSemver && !semver.validRange(range))
+      throw new UsageError(`Invalid package manager specification in ${source} (${raw}); expected a semver range or URL`);
 
     if (!isSupportedPackageManager(name)) {
       throw new UsageError(`Unsupported package manager specification (${raw})`);
