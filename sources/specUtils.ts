@@ -10,7 +10,7 @@ import {Descriptor, isSupportedPackageManager} from './types';
 
 const nodeModulesRegExp = /[\\/]node_modules[\\/](@[^\\/]*[\\/])?([^@\\/][^\\/]*)$/;
 
-export function parseSpec(raw: unknown, source: string, {enforceExactVersion = true, enforceSemver = false} = {}): Descriptor {
+export function parseSpec(raw: unknown, source: string, {enforceExactVersion = false, enforceSemver = true} = {}): Descriptor {
   if (typeof raw !== `string`)
     throw new UsageError(`Invalid package manager specification in ${source}; expected a string`);
 
